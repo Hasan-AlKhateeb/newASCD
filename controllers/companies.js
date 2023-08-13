@@ -271,6 +271,31 @@ const approveCompany = async (req, res) => {
     }
 }
 
+const disapproveCompany = async (req, res) => {
+    try {
+        const { companyID } = req.params;
+        
+        // Check if the provided ID is a valid ObjectId
+        if (!ObjectId.isValid(companyID)) {
+            return res.status(StatusCodes.BAD_REQUEST).json({ error: 'Invalid company ID' });
+        }
+        
+        // Find company in the database
+        const company = await Company.findById(companyID)
+
+        // If the company is not found, return a 404 not found error
+        if (!company) {
+            return res.status(StatusCodes.NOT_FOUND).json({ error: 'Company not found' });
+        }
+
+        // Delete the company from the database
+        await company.remove();
+
+        res.status(StatusCodes.OK).json({ message: 'Company approved successfully' });
+    } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Something went wrong' });
+    }
+}
 
 module.exports = {
     createCompany,
@@ -279,5 +304,6 @@ module.exports = {
     updateCompany,
     deleteCompany,
     approveCompany,
-    getUnapprovedCompanies
+    getUnapprovedCompanies,
+    disapproveCompany,
 }

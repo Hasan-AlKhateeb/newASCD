@@ -11,12 +11,13 @@ const {
     updateCompany,
     deleteCompany,
     approveCompany,
+    disapproveCompany,
     getUnapprovedCompanies,
 } = require('../controllers/companies')
 
 router.route('/').post(createCompany).get(getAllCompanies).delete(authentication, deleteCompany).patch(authentication, updateCompany)
 router.route('/approves').get(authentication, isAdmin, getUnapprovedCompanies)
-router.route('/:companyID').get(getCompany).post(authentication, isAdmin, approveCompany)
+router.route('/:companyID').get(getCompany).post(authentication, isAdmin, approveCompany).delete(authentication, isAdmin, disapproveCompany)
 
 
 module.exports = router
